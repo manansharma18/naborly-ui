@@ -1,23 +1,27 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useEffect, useState } from 'react';
+import axios from "axios";
+import MyMapComponent from './MyMapComponent.jsx';
 
 function App() {
+  const [data, setData] = useState([]);
+  useEffect(()=>{
+    axios.get("http://localhost:3001/fetchAll")
+      .then((response) => {
+        setData(response?.data)
+      });
+      // clean up function to end the db connection
+      //return axios.get("http://localhost:3001/unmount")
+  },[]);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+         <MyMapComponent isMarkerShown
+          data={data}
+           googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUUy9_neKm3T-ddP6JWS9gLOm8ig91pnI&v=3.exp&libraries=geometry,drawing,places"
+           loadingElement={<div style={{ height: `100%` }} />}
+           containerElement= {<div style={{ height: `400px` }} />}
+           mapElement= {<div style={{ height: `100%` }} />}
+         />
     </div>
   );
 }
